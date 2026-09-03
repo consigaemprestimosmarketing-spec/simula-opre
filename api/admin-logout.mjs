@@ -1,14 +1,12 @@
 import {
   buildAdminErrorPage,
   clearAdminSessionCookie,
+  hasAllowedRequestOrigin,
   securityHeaders
 } from '../lib/entry-core.mjs';
 
 export async function POST(request) {
-  const origin = request.headers.get('origin');
-  const expectedOrigin = new URL(request.url).origin;
-
-  if (origin && origin !== expectedOrigin) {
+  if (!hasAllowedRequestOrigin(request)) {
     return new Response(buildAdminErrorPage('A origem desta solicitação não é permitida.'), {
       status: 403,
       headers: {

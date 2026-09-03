@@ -2,6 +2,7 @@ import {
   adminCredentialsConfigured,
   buildAdminErrorPage,
   createAdminSessionCookie,
+  hasAllowedRequestOrigin,
   securityHeaders,
   validAdminCredentials
 } from '../lib/entry-core.mjs';
@@ -18,9 +19,7 @@ function redirect(location, sessionCookie) {
 }
 
 export async function POST(request) {
-  const origin = request.headers.get('origin');
-  const expectedOrigin = new URL(request.url).origin;
-  if (origin && origin !== expectedOrigin) {
+  if (!hasAllowedRequestOrigin(request)) {
     return new Response(buildAdminErrorPage('A origem desta solicitação não é permitida.'), {
       status: 403,
       headers: {

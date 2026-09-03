@@ -29,6 +29,20 @@ const tamperedRequest = new Request('https://simulador.example/admin', {
 });
 assert.equal(core.isAdmin(tamperedRequest), false);
 
+const proxiedRequest = new Request('https://funcao-interna.vercel.app/api/admin-login', {
+  headers: {
+    host: 'funcao-interna.vercel.app',
+    origin: 'https://simulador.example',
+    'x-forwarded-host': 'simulador.example'
+  }
+});
+assert.equal(core.hasAllowedRequestOrigin(proxiedRequest), true);
+
+const foreignOriginRequest = new Request('https://simulador.example/api/admin-login', {
+  headers: { origin: 'https://outro.example' }
+});
+assert.equal(core.hasAllowedRequestOrigin(foreignOriginRequest), false);
+
 const loginRequest = new Request('https://simulador.example/api/admin-login', {
   method: 'POST',
   headers: {

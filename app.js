@@ -80,14 +80,17 @@ function setupIdentity() {
 
     const profile = { name, branch: branchSelect.value };
     nameInput.value = name;
+    status.dataset.state = 'loading';
     status.textContent = 'Salvando identificação...';
     submitButton.disabled = true;
 
     try {
       await registerEntry(profile);
       status.textContent = '';
+      delete status.dataset.state;
       showSimulator(profile);
     } catch (error) {
+      status.dataset.state = 'error';
       status.textContent = error.message;
     } finally {
       submitButton.disabled = false;
@@ -97,10 +100,12 @@ function setupIdentity() {
   nameInput.addEventListener('input', () => {
     nameInput.setCustomValidity('');
     status.textContent = '';
+    delete status.dataset.state;
   });
 
   branchSelect.addEventListener('change', () => {
     status.textContent = '';
+    delete status.dataset.state;
   });
 
   $('change-profile').addEventListener('click', () => {

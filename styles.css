@@ -95,10 +95,8 @@ input {
 
 .entry-header img {
   display: block;
-  width: 142px;
+  width: 190px;
   height: auto;
-  padding: 9px 12px;
-  background: var(--white);
 }
 
 .entry-header span {
@@ -219,13 +217,31 @@ input {
 }
 
 .identity-status {
-  min-height: 1.15rem;
-  margin: 12px 0 0;
+  margin: 14px 0 0;
+  border-left: 4px solid #b64b40;
+  padding: 11px 12px;
   color: #8d2d26;
+  background: #fff1ef;
   font-size: .72rem;
   font-weight: 700;
   line-height: 1.4;
-  text-align: center;
+  text-align: left;
+}
+
+.identity-status:empty {
+  display: none;
+}
+
+.identity-status[data-state='loading'] {
+  border-left-color: var(--green);
+  color: var(--forest);
+  background: var(--mist);
+}
+
+.identity-form input:user-invalid,
+.identity-form select:user-invalid {
+  border-color: #b64b40;
+  background: #fff8f7;
 }
 
 .identity-form > small {
@@ -801,8 +817,7 @@ tbody tr.active {
   }
 
   .entry-header img {
-    width: 116px;
-    padding: 7px 9px;
+    width: 146px;
   }
 
   .entry-header span {

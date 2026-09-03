@@ -1,5 +1,6 @@
 import {
-  adminChallenge,
+  buildAdminErrorPage,
+  buildAdminLoginPage,
   buildAdminPage,
   isAdmin,
   securityHeaders
@@ -7,7 +8,16 @@ import {
 import { readEntries } from '../lib/supabase-entries.mjs';
 
 export async function GET(request) {
-  if (!isAdmin(request)) return adminChallenge();
+  if (!isAdmin(request)) {
+    const errorCode = new URL(request.url).searchParams.get('erro') || '';
+    return new Response(buildAdminLoginPage(errorCode), {
+      status: 200,
+      headers: {
+        ...securityHeaders(true),
+        'Content-Type': 'text/html; charset=utf-8'
+      }
+    });
+  }
 
   try {
     const entries = await readEntries();
@@ -20,11 +30,13 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error(error);
-    return new Response('Não foi possível abrir os registros.', {
+    return new Response(buildAdminErrorPage(
+      'Verifique a conexão com o Supabase e tente novamente.'
+    ), {
       status: error.status || 500,
       headers: {
         ...securityHeaders(true),
-        'Content-Type': 'text/plain; charset=utf-8'
+        'Content-Type': 'text/html; charset=utf-8'
       }
     });
   }

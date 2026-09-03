@@ -39,8 +39,9 @@ Aplique as variáveis ao ambiente **Production** e faça um novo deploy.
 - Painel: `https://seu-dominio.vercel.app/admin`.
 - TXT: botão **Baixar arquivo TXT** dentro do painel.
 
-O painel usa autenticação HTTP e deve ser acessado somente por HTTPS. A Vercel
-fornece HTTPS automaticamente.
+O painel usa uma tela de login própria. Depois da autenticação, uma sessão
+segura fica válida por 8 horas e pode ser encerrada pelo botão **Sair do
+painel**. A Vercel fornece HTTPS automaticamente.
 
 ## Segurança aplicada
 
@@ -49,7 +50,8 @@ fornece HTTPS automaticamente.
 - Os papéis `anon` e `authenticated` não têm acesso à tabela.
 - O navegador envia os dados apenas para `/api/entradas` no mesmo domínio.
 - Nome e filial são validados novamente no servidor e no banco.
-- O painel e o TXT exigem a senha administrativa.
+- O painel e o TXT exigem uma sessão administrativa válida.
+- O cookie de sessão é `HttpOnly`, `SameSite=Strict` e assinado no servidor.
 - Rotas administrativas não devem ser indexadas por buscadores.
 
 ## Plano gratuito

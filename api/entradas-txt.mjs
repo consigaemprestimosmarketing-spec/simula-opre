@@ -1,5 +1,5 @@
 import {
-  adminChallenge,
+  buildAdminErrorPage,
   buildEntriesTxt,
   isAdmin,
   securityHeaders
@@ -7,7 +7,15 @@ import {
 import { readEntries } from '../lib/supabase-entries.mjs';
 
 export async function GET(request) {
-  if (!isAdmin(request)) return adminChallenge();
+  if (!isAdmin(request)) {
+    return new Response(null, {
+      status: 303,
+      headers: {
+        ...securityHeaders(true),
+        Location: '/admin?erro=sessao'
+      }
+    });
+  }
 
   try {
     const entries = await readEntries();
@@ -21,11 +29,13 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error(error);
-    return new Response('Não foi possível gerar o arquivo.', {
+    return new Response(buildAdminErrorPage(
+      'O arquivo não pôde ser gerado agora. Tente novamente em instantes.'
+    ), {
       status: error.status || 500,
       headers: {
         ...securityHeaders(true),
-        'Content-Type': 'text/plain; charset=utf-8'
+        'Content-Type': 'text/html; charset=utf-8'
       }
     });
   }

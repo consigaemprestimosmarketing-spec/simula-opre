@@ -110,7 +110,7 @@ input {
 }
 
 .admin-login-brand h1 {
-  max-width: 8.5ch;
+  max-width: 9.5ch;
   margin: 0;
   color: var(--white);
   font-size: clamp(3.6rem, 7vw, 6.5rem);
@@ -439,7 +439,7 @@ tbody tr:hover {
   }
 
   .admin-login-brand h1 {
-    max-width: 9ch;
+    max-width: 9.5ch;
     font-size: clamp(2.85rem, 12vw, 4.2rem);
   }
 

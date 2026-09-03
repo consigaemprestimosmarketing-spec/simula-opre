@@ -28,7 +28,7 @@ Importe este projeto na Vercel e crie as seguintes variáveis em
 - `SUPABASE_URL`: URL do projeto Supabase.
 - `SUPABASE_SECRET_KEY`: chave secret do Supabase.
 - `ADMIN_USER`: usuário do painel; sugestão: `admin`.
-- `ADMIN_PASSWORD`: senha forte com pelo menos 12 caracteres.
+- `ADMIN_PASSWORD`: senha com pelo menos 8 caracteres.
 - `APP_TIMEZONE`: opcional; o padrão é `America/Sao_Paulo`.
 
 Aplique as variáveis ao ambiente **Production** e faça um novo deploy.

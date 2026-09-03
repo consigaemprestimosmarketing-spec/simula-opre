@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 
 process.env.ADMIN_USER = 'gestao';
-process.env.ADMIN_PASSWORD = 'senha-de-teste-com-24-chars';
+process.env.ADMIN_PASSWORD = 'teste123';
 
 const core = await import('../lib/entry-core.mjs');
 const login = await import('../api/admin-login.mjs');
@@ -9,8 +9,11 @@ const logout = await import('../api/admin-logout.mjs');
 const admin = await import('../api/admin.mjs');
 
 assert.equal(core.adminCredentialsConfigured(), true);
-assert.equal(core.validAdminCredentials('gestao', 'senha-de-teste-com-24-chars'), true);
+assert.equal(core.validAdminCredentials('gestao', 'teste123'), true);
 assert.equal(core.validAdminCredentials('gestao', 'senha-incorreta'), false);
+process.env.ADMIN_PASSWORD = '1234567';
+assert.equal(core.adminCredentialsConfigured(), false);
+process.env.ADMIN_PASSWORD = 'teste123';
 
 const request = new Request('https://simulador.example/admin');
 const sessionCookie = core.createAdminSessionCookie(request);
@@ -51,7 +54,7 @@ const loginRequest = new Request('https://simulador.example/api/admin-login', {
   },
   body: new URLSearchParams({
     user: 'gestao',
-    password: 'senha-de-teste-com-24-chars'
+    password: 'teste123'
   })
 });
 const loginResponse = await login.POST(loginRequest);

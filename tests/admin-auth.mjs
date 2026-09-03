@@ -85,5 +85,6 @@ assert.match(logoutResponse.headers.get('set-cookie'), /Max-Age=0/);
 const escapedError = core.buildAdminErrorPage('<script>erro</script>');
 assert.doesNotMatch(escapedError, /<script>erro/);
 assert.match(escapedError, /&lt;script&gt;erro&lt;\/script&gt;/);
+assert.match(escapedError, /logo-principal\.png/);
 
 console.log('Autenticação administrativa validada.');

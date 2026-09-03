@@ -386,9 +386,8 @@ tbody tr:hover {
 
 .admin-error img,
 .site-error img {
+  width: 220px;
   margin-bottom: 48px;
-  padding: 13px 15px;
-  background: var(--forest);
 }
 
 .admin-error > p,
@@ -495,6 +494,11 @@ tbody tr:hover {
   .site-error {
     padding: 28px 22px;
     box-shadow: 7px 7px 0 var(--gold);
+  }
+
+  .admin-error img,
+  .site-error img {
+    width: 190px;
   }
 }
 

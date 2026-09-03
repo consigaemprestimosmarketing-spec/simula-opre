@@ -67,7 +67,7 @@ input {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   overflow: hidden;
   padding: 40px;
 }
@@ -96,7 +96,7 @@ input {
   position: relative;
   z-index: 1;
   max-width: 620px;
-  padding-bottom: 25px;
+  margin: auto 0;
 }
 
 .admin-login-brand p,

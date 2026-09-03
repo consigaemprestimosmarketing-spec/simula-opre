@@ -36,13 +36,24 @@ const proxiedRequest = new Request('https://funcao-interna.vercel.app/api/admin-
   headers: {
     host: 'funcao-interna.vercel.app',
     origin: 'https://simulador.example',
-    'x-forwarded-host': 'simulador.example'
+    'x-forwarded-host': 'funcao-interna.vercel.app, simulador.example'
   }
 });
 assert.equal(core.hasAllowedRequestOrigin(proxiedRequest), true);
 
+const browserProxiedRequest = new Request('https://funcao-interna.vercel.app/api/admin-login', {
+  headers: {
+    origin: 'https://simulador.example',
+    'sec-fetch-site': 'same-origin'
+  }
+});
+assert.equal(core.hasAllowedRequestOrigin(browserProxiedRequest), true);
+
 const foreignOriginRequest = new Request('https://simulador.example/api/admin-login', {
-  headers: { origin: 'https://outro.example' }
+  headers: {
+    origin: 'https://outro.example',
+    'sec-fetch-site': 'cross-site'
+  }
 });
 assert.equal(core.hasAllowedRequestOrigin(foreignOriginRequest), false);
 

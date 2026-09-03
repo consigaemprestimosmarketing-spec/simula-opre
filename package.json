@@ -1,0 +1,15 @@
+{
+  "name": "simulador-premiacao-consiga",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Simulador semanal com registro administrativo no Supabase.",
+  "scripts": {
+    "check": "node --check app.js && node --check api/entradas.mjs && node --check api/admin.mjs && node --check api/entradas-txt.mjs && node --check lib/entry-core.mjs && node --check lib/supabase-entries.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang='pt-BR'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta name='theme-color' content='#073b32'>
+  <meta name='description' content='Calcule a premiação semanal por contratos novos e refinanciamentos.'>
+  <title>Simulador de Premiação | Consiga</title>
+  <link rel='preconnect' href='https://fonts.googleapis.com'>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap' rel='stylesheet'>
+  <link rel='stylesheet' href='styles.css'>
+</head>
+<body>
+  <a class='skip-link' href='#simulator'>Ir para a simulação</a>
+
+  <div class='entry-screen' id='entry-screen'>
+    <div class='entry-shell'>
+      <header class='entry-header'>
+        <img src='assets/logo-consiga.png' alt='Consiga Empréstimos'>
+        <span>Premiação comercial</span>
+      </header>
+
+      <div class='entry-layout'>
+        <section class='entry-copy' aria-labelledby='entry-title'>
+          <p>Sua semana começa aqui</p>
+          <h1 id='entry-title'>Quem está fechando o placar?</h1>
+          <span>Identifique-se para abrir sua simulação semanal.</span>
+        </section>
+
+        <form class='identity-form' id='identity-form'>
+          <header>
+            <h2>Antes de calcular</h2>
+            <p>Preencha seus dados de atendimento.</p>
+          </header>
+
+          <label for='person-name'>Seu nome</label>
+          <input
+            id='person-name'
+            name='person-name'
+            type='text'
+            autocomplete='name'
+            maxlength='60'
+            placeholder='Digite seu nome'
+            required
+          >
+
+          <label for='branch'>Sua filial</label>
+          <select id='branch' name='branch' required>
+            <option value='' selected disabled>Selecione uma filial</option>
+            <optgroup label='Espírito Santo'>
+              <option>Vitória</option>
+              <option>Campo Grande — Cariacica</option>
+              <option>Laranjeiras 1 — Serra</option>
+              <option>Laranjeiras 2 — Serra</option>
+              <option>Muquiçaba — Guarapari</option>
+              <option>Cachoeiro de Itapemirim</option>
+              <option>Marataízes</option>
+              <option>Linhares</option>
+              <option>Aracruz</option>
+              <option>Colatina</option>
+              <option>São Mateus</option>
+            </optgroup>
+            <optgroup label='Bahia'>
+              <option>Porto Seguro</option>
+              <option>Teixeira de Freitas</option>
+              <option>Vitória da Conquista</option>
+              <option>Eunápolis</option>
+              <option>Itabuna</option>
+              <option>Jequié</option>
+            </optgroup>
+            <optgroup label='Rio de Janeiro'>
+              <option>Campos dos Goytacazes</option>
+            </optgroup>
+          </select>
+
+          <button type='submit'>Salvar e abrir simulação</button>
+          <p class='identity-status' id='identity-status' role='status' aria-live='polite'></p>
+          <small>Ao continuar, nome, filial e horário serão registrados para o administrador.</small>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <main class='page' id='simulator-page' hidden>
+    <header class='masthead'>
+      <div class='brand'>
+        <img src='assets/logo-consiga.png' alt='Consiga Empréstimos'>
+      </div>
+      <div class='masthead-context'>
+        <div>
+          <span id='consultant-name'>Consultor</span>
+          <strong id='branch-name'>Filial</strong>
+        </div>
+        <button type='button' id='change-profile'>Trocar nome ou filial</button>
+      </div>
+    </header>
+
+    <section class='intro' aria-labelledby='page-title'>
+      <p class='intro-kicker'>Seu fechamento em números</p>
+      <h1 id='page-title'>Quanto sua semana<br>pode render?</h1>
+      <p class='intro-copy'>Informe os contratos fechados e veja sua faixa na hora.</p>
+    </section>
+
+    <section class='scoreboard' aria-label='Simulador de premiação'>
+      <form class='input-panel' id='simulator' autocomplete='off'>
+        <header class='panel-heading'>
+          <h2>Informe sua produção</h2>
+          <p>Use o total fechado nesta semana.</p>
+        </header>
+
+        <div class='fields'>
+          <label for='refin'>
+            <span>Contratos de refinanciamento</span>
+            <span class='number-input'>
+              <input id='refin' type='number' min='0' step='1' value='3' inputmode='numeric'>
+              <small>contratos</small>
+            </span>
+          </label>
+
+          <label for='novo'>
+            <span>Contratos novos</span>
+            <span class='number-input'>
+              <input id='novo' type='number' min='0' step='1' value='5' inputmode='numeric'>
+              <small>contratos</small>
+            </span>
+          </label>
+        </div>
+
+        <div class='weekly-total'>
+          <span>Total da semana</span>
+          <strong><span id='contracts'>8</span> contratos</strong>
+        </div>
+
+        <button class='reset' type='button' id='reset'>Limpar simulação</button>
+      </form>
+
+      <article class='result-panel' aria-live='polite' aria-atomic='false'>
+        <header class='result-heading'>
+          <div>
+            <span class='result-context'>Resultado calculado</span>
+            <strong id='tier'>Faixa 4</strong>
+          </div>
+          <p id='tier-status'>Meta semanal atingida</p>
+        </header>
+
+        <section class='prize-score' aria-label='Prêmio estimado'>
+          <span>Prêmio estimado</span>
+          <p class='award' id='award'>R$ 400,00</p>
+        </section>
+
+        <div class='progress-block'>
+          <div class='progress-copy'>
+            <strong id='progress-label'>8 contratos</strong>
+            <span id='next-label'>Próxima faixa: 9</span>
+          </div>
+          <div class='meter' role='progressbar' aria-label='Progresso entre as faixas' aria-valuemin='0' aria-valuemax='13' aria-valuenow='8'>
+            <div id='meter-fill'></div>
+          </div>
+        </div>
+
+        <dl class='breakdown'>
+          <div>
+            <dt>Refinanciamento <small id='refin-detail'></small></dt>
+            <dd id='refin-award'>R$ 160,00</dd>
+          </div>
+          <div>
+            <dt>Contratos novos <small id='novo-detail'></small></dt>
+            <dd id='novo-award'>R$ 240,00</dd>
+          </div>
+          <div>
+            <dt>Produtividade <small>média diária em 5 dias</small></dt>
+            <dd id='productivity'>1,60</dd>
+          </div>
+          <div class='opportunity-row'>
+            <dt>Valor ainda disponível <small>até o máximo desta faixa</small></dt>
+            <dd id='opportunity'>R$ 0,00</dd>
+          </div>
+        </dl>
+      </article>
+
+      <details class='rules-panel'>
+        <summary>
+          <span>
+            <strong>Como sua premiação foi calculada</strong>
+            <small>Consulte limites e valores das nove faixas.</small>
+          </span>
+          <span class='summary-action' aria-hidden='true'>Abrir</span>
+        </summary>
+
+        <div class='table-scroll' tabindex='0' aria-label='Tabela com rolagem horizontal'>
+          <table>
+            <caption>Regras de premiação por faixa</caption>
+            <thead>
+              <tr>
+                <th scope='col'>Faixa</th>
+                <th scope='col'>Produtividade</th>
+                <th scope='col'>Total</th>
+                <th scope='col'>Limite refin.</th>
+                <th scope='col'>Valor/refin.</th>
+                <th scope='col'>Limite novo</th>
+                <th scope='col'>Valor/novo</th>
+                <th scope='col'>Prêmio máximo</th>
+              </tr>
+            </thead>
+            <tbody id='tier-table'></tbody>
+          </table>
+        </div>
+        <p class='footnote'>O excesso de uma categoria não compensa a falta da outra.</p>
+      </details>
+    </section>
+  </main>
+
+  <script src='app.js'></script>
+</body>
+</html>

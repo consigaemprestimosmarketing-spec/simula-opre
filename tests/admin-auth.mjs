@@ -72,6 +72,7 @@ assert.equal(anonymousResponse.status, 200);
 const loginPage = await anonymousResponse.text();
 assert.match(loginPage, /Entrar no painel/);
 assert.match(loginPage, /Sua sessão terminou/);
+assert.match(loginPage, /href='\/' aria-label='Voltar ao simulador'/);
 assert.doesNotMatch(loginPage, /senha-de-teste/);
 
 const logoutResponse = await logout.POST(new Request(

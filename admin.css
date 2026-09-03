@@ -92,6 +92,14 @@ input {
   height: auto;
 }
 
+.admin-login-brand > a,
+.admin-bar > a,
+.admin-error > a:first-child,
+.site-error > a:first-child {
+  display: block;
+  width: fit-content;
+}
+
 .admin-login-brand > div {
   position: relative;
   z-index: 1;
@@ -198,8 +206,8 @@ input {
 
 .admin-login-panel button,
 .admin-head a,
-.admin-error a,
-.site-error a {
+.admin-error > a:last-child,
+.site-error > a:last-child {
   border: 1px solid var(--forest);
   padding: 15px 18px;
   color: var(--forest);
@@ -217,8 +225,8 @@ input {
 
 .admin-login-panel button:hover,
 .admin-head a:hover,
-.admin-error a:hover,
-.site-error a:hover {
+.admin-error > a:last-child:hover,
+.site-error > a:last-child:hover {
   color: var(--white);
   background: var(--forest);
 }
@@ -406,8 +414,8 @@ tbody tr:hover {
   line-height: 1.55;
 }
 
-.admin-error a,
-.site-error a {
+.admin-error > a:last-child,
+.site-error > a:last-child {
   display: inline-block;
   font-size: .82rem;
 }

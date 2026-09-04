@@ -1,7 +1,7 @@
 import {
   calculateSimulation,
   productivityDays,
-  tiers
+  tiersForDays
 } from './lib/simulator-rules.mjs';
 
 const $ = id => document.getElementById(id);
@@ -16,6 +16,9 @@ const num = new Intl.NumberFormat('pt-BR', {
 
 let previousAward = null;
 const productivityDayCount = productivityDays();
+const tiers = tiersForDays(productivityDayCount);
+const minimumContracts = tiers[0].total;
+const maximumContracts = tiers.at(-1).total;
 
 function showSimulator(profile, moveFocus = true) {
   $('consultant-name').textContent = profile.name;
@@ -118,7 +121,7 @@ function rowTable(activeTier) {
 
     return `<tr class='${rowClass}'${current}>
       <th scope='row'>Faixa ${tier.faixa}</th>
-      <td>${num.format(tier.total / productivityDayCount)}</td>
+      <td>${num.format(tier.prod)}</td>
       <td>${tier.total}</td>
       <td>${tier.refin}</td>
       <td>${brl.format(tier.refinPrize / tier.refin)}</td>
@@ -155,7 +158,7 @@ function simulate() {
     novoAward,
     award,
     nextTier
-  } = calculateSimulation($('refin').value, $('novo').value);
+  } = calculateSimulation($('refin').value, $('novo').value, productivityDayCount);
 
   $('contracts').textContent = total;
   $('productivity').textContent = num.format(total / productivityDayCount);
@@ -176,15 +179,16 @@ function simulate() {
   $('tier').textContent = tier ? `Faixa ${tier.faixa}` : 'Sem faixa';
   $('tier-status').textContent = tier
     ? 'Meta semanal atingida'
-    : `Falta${5 - total === 1 ? '' : 'm'} ${Math.max(0, 5 - total)} contrato${5 - total === 1 ? '' : 's'}`;
+    : `Falta${minimumContracts - total === 1 ? '' : 'm'} ${Math.max(0, minimumContracts - total)} contrato${minimumContracts - total === 1 ? '' : 's'}`;
   $('progress-label').textContent = `${total} contrato${total === 1 ? '' : 's'}`;
   $('next-label').textContent = nextTier
     ? `Próxima faixa: ${nextTier.total}`
     : 'Faixa máxima alcançada';
 
   const meter = document.querySelector('.meter');
-  meter.setAttribute('aria-valuenow', Math.min(13, total));
-  $('meter-fill').style.width = `${Math.min(100, total / 13 * 100)}%`;
+  meter.setAttribute('aria-valuemax', maximumContracts);
+  meter.setAttribute('aria-valuenow', Math.min(maximumContracts, total));
+  $('meter-fill').style.width = `${Math.min(100, total / maximumContracts * 100)}%`;
 
   animateAward(award);
   rowTable(tier);

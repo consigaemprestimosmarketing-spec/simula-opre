@@ -116,3 +116,5 @@ assert.match(escapedError, /&lt;script&gt;erro&lt;\/script&gt;/);
 assert.match(escapedError, /logo-principal\.png/);
 
 console.log('Autenticação administrativa validada.');
+
+await import('./simulator-rules.mjs');

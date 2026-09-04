@@ -1,14 +1,8 @@
-const tiers = [
-  { faixa: 1, prod: 1, total: 5, refin: 2, refinPrize: 40, novo: 3, novoPrize: 60, max: 100 },
-  { faixa: 2, prod: 1.2, total: 6, refin: 2, refinPrize: 80, novo: 4, novoPrize: 120, max: 200 },
-  { faixa: 3, prod: 1.4, total: 7, refin: 3, refinPrize: 120, novo: 4, novoPrize: 180, max: 300 },
-  { faixa: 4, prod: 1.6, total: 8, refin: 3, refinPrize: 160, novo: 5, novoPrize: 240, max: 400 },
-  { faixa: 5, prod: 1.8, total: 9, refin: 4, refinPrize: 240, novo: 5, novoPrize: 360, max: 600 },
-  { faixa: 6, prod: 2, total: 10, refin: 4, refinPrize: 300, novo: 6, novoPrize: 450, max: 750 },
-  { faixa: 7, prod: 2.2, total: 11, refin: 4, refinPrize: 360, novo: 7, novoPrize: 540, max: 900 },
-  { faixa: 8, prod: 2.4, total: 12, refin: 5, refinPrize: 400, novo: 7, novoPrize: 600, max: 1000 },
-  { faixa: 9, prod: 2.6, total: 13, refin: 5, refinPrize: 480, novo: 8, novoPrize: 720, max: 1200 }
-];
+import {
+  calculateSimulation,
+  productivityDays,
+  tiers
+} from './lib/simulator-rules.mjs';
 
 const $ = id => document.getElementById(id);
 const brl = new Intl.NumberFormat('pt-BR', {
@@ -21,6 +15,7 @@ const num = new Intl.NumberFormat('pt-BR', {
 });
 
 let previousAward = null;
+const productivityDayCount = productivityDays();
 
 function showSimulator(profile, moveFocus = true) {
   $('consultant-name').textContent = profile.name;
@@ -115,19 +110,6 @@ function setupIdentity() {
   showIdentity(false);
 }
 
-function integer(value) {
-  const parsed = Math.floor(Number(value));
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
-}
-
-function totalTier(total) {
-  let found = null;
-  for (const tier of tiers) {
-    if (total >= tier.total) found = tier;
-  }
-  return found;
-}
-
 function rowTable(activeTier) {
   $('tier-table').innerHTML = [...tiers].reverse().map(tier => {
     const active = activeTier && tier.faixa === activeTier.faixa;
@@ -136,7 +118,7 @@ function rowTable(activeTier) {
 
     return `<tr class='${rowClass}'${current}>
       <th scope='row'>Faixa ${tier.faixa}</th>
-      <td>${num.format(tier.prod)}</td>
+      <td>${num.format(tier.total / productivityDayCount)}</td>
       <td>${tier.total}</td>
       <td>${tier.refin}</td>
       <td>${brl.format(tier.refinPrize / tier.refin)}</td>
@@ -161,22 +143,25 @@ function animateAward(value) {
 }
 
 function simulate() {
-  const refin = integer($('refin').value);
-  const novo = integer($('novo').value);
-  const total = refin + novo;
-  const tier = totalTier(total);
-  const refinUnit = tier ? tier.refinPrize / tier.refin : 0;
-  const novoUnit = tier ? tier.novoPrize / tier.novo : 0;
-  const paidRefin = tier ? Math.min(refin, tier.refin) : 0;
-  const paidNovo = tier ? Math.min(novo, tier.novo) : 0;
-  const refinAward = paidRefin * refinUnit;
-  const novoAward = paidNovo * novoUnit;
-  const nextTier = tiers.find(item => item.total > total);
+  const {
+    total,
+    tier,
+    refinUnit,
+    novoUnit,
+    paidRefin,
+    paidNovo,
+    allNewMaximum,
+    refinAward,
+    novoAward,
+    award,
+    nextTier
+  } = calculateSimulation($('refin').value, $('novo').value);
 
   $('contracts').textContent = total;
-  $('productivity').textContent = num.format(total / 5);
+  $('productivity').textContent = num.format(total / productivityDayCount);
+  $('productivity-days').textContent = productivityDayCount;
   $('opportunity').textContent = brl.format(
-    tier ? Math.max(0, tier.max - (refinAward + novoAward)) : 0
+    tier ? Math.max(0, tier.max - award) : 0
   );
   $('refin-award').textContent = brl.format(refinAward);
   $('novo-award').textContent = brl.format(novoAward);
@@ -184,7 +169,9 @@ function simulate() {
     ? `${paidRefin} remunerados × ${brl.format(refinUnit)}`
     : 'faixa mínima ainda não atingida';
   $('novo-detail').textContent = tier
-    ? `${paidNovo} remunerados × ${brl.format(novoUnit)}`
+    ? allNewMaximum
+      ? `${tier.total} novos atingem o prêmio máximo`
+      : `${paidNovo} remunerados × ${brl.format(novoUnit)}`
     : 'faixa mínima ainda não atingida';
   $('tier').textContent = tier ? `Faixa ${tier.faixa}` : 'Sem faixa';
   $('tier-status').textContent = tier
@@ -199,7 +186,7 @@ function simulate() {
   meter.setAttribute('aria-valuenow', Math.min(13, total));
   $('meter-fill').style.width = `${Math.min(100, total / 13 * 100)}%`;
 
-  animateAward(refinAward + novoAward);
+  animateAward(award);
   rowTable(tier);
 }
 

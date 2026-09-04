@@ -35,6 +35,21 @@ assert.deepEqual(
 assert.equal(tiersForDays(4), fourDayTiers);
 assert.equal(tiersForDays(5), fiveDayTiers);
 
+assert.deepEqual(
+  fourDayTiers.map(tier => [tier.refinPrize / tier.refin, tier.novoPrize / tier.novo]),
+  [
+    [16, 16],
+    [32, 24],
+    [32, 36],
+    [128 / 3, 38.4],
+    [52, 62.4],
+    [60, 60],
+    [72, 432 / 7],
+    [64, 480 / 7],
+    [76.8, 72]
+  ]
+);
+
 for (const [total, faixa, max] of [
   [4, 1, 80],
   [5, 2, 160],
